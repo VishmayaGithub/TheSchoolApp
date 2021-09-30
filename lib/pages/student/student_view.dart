@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:my_school_app/components/auth_service.dart';
 import 'package:my_school_app/components/nav.dart';
 import 'package:my_school_app/helpers/colors.dart';
 import 'package:my_school_app/info2.dart';
+import 'package:provider/provider.dart';
 
 import '../../info.dart';
+import '../home.dart';
 
 class StudentView extends StatefulWidget {
   const StudentView({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class _StudentViewState extends State<StudentView> {
     //await CustomSharedPreferences.saveUserOnBoarding(true);
     return Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => Info2(),
+        builder: (context) => Home(),
       ),
       (route) => false,
     );
@@ -53,6 +56,7 @@ class _StudentViewState extends State<StudentView> {
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("given_hw").snapshots();
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Scaffold(
         drawer: NavBar(),
         appBar: AppBar(
@@ -70,13 +74,15 @@ class _StudentViewState extends State<StudentView> {
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.info_outlined,
+                Icons.power_settings_new,
                 color: Colors.white,
-                size: 30,
+                //size: 20,
               ),
-              onPressed: () {
+              onPressed: () async {
                 //_navigateToLogin();
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> Info2()));
+                await authService.signOut();
+                _navigateToLogin();
+                //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> Info2()));
               },
             )
           ],
@@ -123,6 +129,13 @@ class _StudentViewState extends State<StudentView> {
                             data.docs[index]["due_date"] != ""
                                 ? RichText(
                                     text: TextSpan(children: [
+                                      TextSpan(
+                                          text : "Subject : ${data.docs[index]["subject"]}          ",
+                                          style: GoogleFonts.nunito(
+                                              fontSize: 21, color: texting,fontWeight: FontWeight.w500)
+
+                                      ),
+
                                       TextSpan(
                                           text : "Given Date : ${data.docs[index]["given_date"]}   ",
                                           style: GoogleFonts.nunito(

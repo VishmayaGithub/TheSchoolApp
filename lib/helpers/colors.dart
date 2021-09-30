@@ -19,3 +19,4 @@ String homework = "";
 String something = "";
 var value = "";
 String value2 = "Select Subject";
+String mail = "";

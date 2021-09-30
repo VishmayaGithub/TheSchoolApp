@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_school_app/components/auth_service.dart';
 import 'package:my_school_app/components/nav.dart';
+import 'package:my_school_app/components/nav2.dart';
 import 'package:my_school_app/helpers/colors.dart';
 import 'package:my_school_app/helpers/custom_shared_preferences.dart';
+import 'package:provider/provider.dart';
 import '../../info.dart';
 import '../calendar2.dart';
+import '../home.dart';
 
 class EnterHomework extends StatefulWidget {
   const EnterHomework({Key? key}) : super(key: key);
@@ -25,7 +29,7 @@ class _EnterHomeworkState extends State<EnterHomework> {
     //await CustomSharedPreferences.saveUserOnBoarding(true);
     return Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => Info(),
+        builder: (context) => Home(),
       ),
       (route) => false,
     );
@@ -51,8 +55,9 @@ class _EnterHomeworkState extends State<EnterHomework> {
   }
 
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Scaffold(
-      drawer: NavBar(),
+      drawer: NavBar2(),
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           centerTitle: true,
@@ -73,12 +78,14 @@ class _EnterHomeworkState extends State<EnterHomework> {
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.info_outlined,
+                Icons.power_settings_new,
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () {
+              onPressed: () async {
+                await authService.signOut();
                 _navigateToLogin();
+
               },
             )
           ],

@@ -19,16 +19,17 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+import '../info.dart';
 import '../info2.dart';
 import 'auth_service.dart';
 
-class NavBar extends StatefulWidget {
+class NavBar2 extends StatefulWidget {
   @override
 
-  _NavBarState createState() => _NavBarState();
+  _NavBar2State createState() => _NavBar2State();
 }
 
-class _NavBarState extends State<NavBar> {
+class _NavBar2State extends State<NavBar2> {
 
 
   String name = "";
@@ -43,7 +44,7 @@ class _NavBarState extends State<NavBar> {
     //await CustomSharedPreferences.saveUserOnBoarding(true);
     return Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => Info2(),
+        builder: (context) => Info(),
       ),
           (route) => false,
     );
@@ -86,7 +87,7 @@ class _NavBarState extends State<NavBar> {
     super.initState();
     // print(selectedDay);
   }
-  
+
   Future<void> storage() async {
     await Permission.photos.request();
     var firebaseUser = FirebaseAuth.instance.currentUser!.email;
@@ -111,91 +112,91 @@ class _NavBarState extends State<NavBar> {
 
   }
   final Stream<QuerySnapshot> users =
-      FirebaseFirestore.instance.collection("users").snapshots();
+  FirebaseFirestore.instance.collection("users").snapshots();
 
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
 
     return Drawer(
 
-         child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.center,
-                      child: CircleAvatar(
-                        radius: 100,
-                        backgroundColor: button,
-                        child: ClipOval(
-                          child: SizedBox(
-                            width: 180,
-                            height: 180,
-                            child: (_image!=null)?
-                            Image.file(
-                              _image!,
-                              fit: BoxFit.fill,
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 100,
+                    backgroundColor: button,
+                    child: ClipOval(
+                      child: SizedBox(
+                          width: 180,
+                          height: 180,
+                          child: (_image!=null)?
+                          Image.file(
+                            _image!,
+                            fit: BoxFit.fill,
 
-                            ):Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYUbi-Jf5QxIW-koSAO97ZmKrOXadXeJ3xQ&usqp=CAU",fit: BoxFit.fill,)
-                          ),
-                        ),
-                      ),
-
-                ),
-
-
-                    Padding(
-                      padding: EdgeInsets.only(top: 60.0),
-                      child: IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.camera,
-                          size: 30.0,
-                        ),
-                        onPressed: () async {
-                          final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                          this.setState(() {
-                            _image = File(image!.path);
-                          });
-                        },
+                          ):Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYUbi-Jf5QxIW-koSAO97ZmKrOXadXeJ3xQ&usqp=CAU",fit: BoxFit.fill,)
                       ),
                     ),
-
-                  ],
+                  ),
 
                 ),
+
+
                 Padding(
-                  padding: const EdgeInsets.only(top: 23.0,right : 35),
-                  child: Text(name,
-                      style: GoogleFonts.nunito(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                          color: texting)),
-                ),
-                _image != null?
-                ElevatedButton(onPressed: (){storage();}, child: Text("Upload image")):Text(""),
-                GestureDetector(
-                  onTap: ()async{
-                    _navigateToLogin();
-
+                  padding: EdgeInsets.only(top: 60.0),
+                  child: IconButton(
+                    icon: Icon(
+                      FontAwesomeIcons.camera,
+                      size: 30.0,
+                    ),
+                    onPressed: () async {
+                      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      this.setState(() {
+                        _image = File(image!.path);
+                      });
                     },
-                  child: ListTile(
-                    title: Text("Info",style: GoogleFonts.nunito(fontSize : 20),),  leading: Icon(Icons.info_outlined),
                   ),
                 ),
-
 
               ],
 
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 23.0,right : 35),
+              child: Text(name,
+                  style: GoogleFonts.nunito(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                      color: texting)),
+            ),
+            _image != null?
+            ElevatedButton(onPressed: (){storage();}, child: Text("Upload image")):Text(""),
+            GestureDetector(
+              onTap: ()async{
+                _navigateToLogin();
 
-          ),
-        );
+              },
+              child: ListTile(
+                title: Text("Info",style: GoogleFonts.nunito(fontSize : 20),),  leading: Icon(Icons.info_outlined),
+              ),
+            ),
+
+
+          ],
+
+        ),
+
+      ),
+    );
 
   }
 

@@ -16,17 +16,25 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+  String dropdownvalue = 'Choose Subject';
+  var items = [
+    'Choose Subject',
+    'Mathematics',
+    'English',
+    'Biology',
+    'Chemistry',
+    'Physics',
+    'Social science'
+  ];
   Map<DateTime, List<Event>>? selectedEvents;
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
   var homework = "";
   late DateTime duedate;
-  bool _hasBeenPressed = false;
-  bool _hasBeenPressed2 = false;
-  bool _hasBeenPressed3 = false;
 
-  var dropdownValue = "One";
+
+  //var dropdownValue = "One";
 
   TextEditingController _eventController = TextEditingController();
 
@@ -45,6 +53,21 @@ class _CalendarState extends State<Calendar> {
   void dispose() {
     _eventController.dispose();
     super.dispose();
+  }
+
+  dropdown() {
+    return DropdownButton(
+      value: dropdownvalue,
+      icon: Icon(Icons.keyboard_arrow_down),
+      items: items.map((String items) {
+        return DropdownMenuItem(value: items, child: Text(items));
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownvalue = newValue!;
+        });
+      },
+    );
   }
 
   var firebaseUser = FirebaseAuth.instance.currentUser!.email;
@@ -74,7 +97,6 @@ class _CalendarState extends State<Calendar> {
         child: Column(
           children: [
             TableCalendar(
-
               focusedDay: selectedDay,
               firstDay: DateTime(1990),
               lastDay: DateTime(2050),
@@ -84,7 +106,7 @@ class _CalendarState extends State<Calendar> {
                   format = _format;
                 });
               },
-             // headerVisible: true,
+              // headerVisible: true,
               startingDayOfWeek: StartingDayOfWeek.sunday,
               daysOfWeekVisible: true,
 
@@ -140,7 +162,6 @@ class _CalendarState extends State<Calendar> {
                 formatButtonDecoration: BoxDecoration(
                   color: button,
                   borderRadius: BorderRadius.circular(5.0),
-
                 ),
                 formatButtonTextStyle: TextStyle(
                   color: Colors.white,
@@ -184,7 +205,8 @@ class _CalendarState extends State<Calendar> {
                                             //inputFormatters: [BlacklistingTextInputFormatter(new RegExp('[\\-|\\ ]'))],
                                             maxLength: 1,
                                             decoration: InputDecoration(
-                                                hintText: "Enter grade (number)",
+                                                hintText:
+                                                    "Enter grade (number)",
                                                 hintStyle:
                                                     TextStyle(color: texting),
                                                 fillColor: bg,
@@ -224,7 +246,9 @@ class _CalendarState extends State<Calendar> {
                                             },
                                             child: Text(
                                               "Send to all students of said grade",
-                                              style: TextStyle(color: texting,fontWeight: FontWeight.w400),
+                                              style: TextStyle(
+                                                  color: texting,
+                                                  fontWeight: FontWeight.w400),
                                             ),
                                           ),
                                           Spacer(flex: 2),
@@ -260,157 +284,68 @@ class _CalendarState extends State<Calendar> {
         onPressed: () => showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Add Event"),
+            title: Text("Add Homework"),
             content: SingleChildScrollView(
-             
-
               child: Scrollbar(
                 child: Wrap(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: TextField(
-                        controller: _eventController,
-                        onChanged: (test) {
-                          homework = test;
-                        },
-                        decoration: InputDecoration(
-                            fillColor: bg2,
-                            hintText: "Add homework",
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: new BorderSide(color: button))),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
-                      child: TextField(
-                        //controller: _eventController,
-                        onChanged: (test) {
-                          subjects = test;
-                        },
-                        decoration: InputDecoration(
-                            fillColor: bg2,
-                            hintText: "Enter Subject",
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: new BorderSide(color: button))),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                      child: DateTimeFormField(
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: Colors.black45),
-                          errorStyle: TextStyle(color: Colors.redAccent),
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.event_note),
-                          labelText: 'Due date',
-                        ),
-                        mode: DateTimeFieldPickerMode.date,
-                        autovalidateMode: AutovalidateMode.always,
-                        validator: (e) => (e?.day ?? 0) == 1
-                            ? 'Please not the first day'
-                            : null,
-                        onDateSelected: (DateTime value) {
-                          duedate = value;
-                        },
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "The available subjects are : ",
-                                      style: GoogleFonts.nunito(
-                                        color: button,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w400,
-                                        //decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    "English,",
-                                    style: GoogleFonts.nunito(
-                                      color: button,
-                                      fontSize: 20,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Mathematics,",
-                                    style: GoogleFonts.nunito(
-                                      color: button,
-                                      fontSize: 20,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Biology,",
-                                    style: GoogleFonts.nunito(
-                                      color: button,
-                                      fontSize: 20,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Chemistry,",
-                                    style: GoogleFonts.nunito(
-                                      color: button,
-                                      fontSize: 20,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Physics,",
-                                    style: GoogleFonts.nunito(
-                                      color: button,
-                                      fontSize: 20,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0,bottom:8),
-                                    child: Text(
-                                      "More subjects will be added soon. Stay in touch for more updates!!",
-                                      style: GoogleFonts.nunito(
-                                        color: button,
-                                        fontSize: 16,
-                                        //fontWeight: FontWeight.w600,
-                                        //decoration: TextDecoration.underline,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-
-                                  Text(
-                                    "Please type all fields without mistakes",
-                                    style: GoogleFonts.nunito(
-                                      color: Colors.red,
-                                      fontSize: 16,
-                                      //fontWeight: FontWeight.w600,
-                                      //decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: Text(
-                        "Warning!! There are only a few available subjects. View available subjects",
-                        style: GoogleFonts.nunito(color: Colors.red),
-                      ),
-                    )
+                  children: <Widget>[
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return Wrap(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: TextField(
+                              controller: _eventController,
+                              onChanged: (test) {
+                                homework = test;
+                              },
+                              decoration: InputDecoration(
+                                  fillColor: bg2,
+                                  hintText: "Enter homework",
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          new BorderSide(color: button))),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(top: 8, bottom: 8),
+                              child: DropdownButton(
+                                value: dropdownvalue,
+                                icon: Icon(Icons.keyboard_arrow_down),
+                                items: items.map((String items) {
+                                  return DropdownMenuItem(value: items, child: Text(items));
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownvalue = newValue!;
+                                    subjects = newValue;
+                                  });
+                                },
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                            child: DateTimeFormField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(color: Colors.black45),
+                                errorStyle: TextStyle(color: Colors.redAccent),
+                                border: OutlineInputBorder(),
+                                suffixIcon: Icon(Icons.event_note),
+                                labelText: 'Due date',
+                              ),
+                              mode: DateTimeFieldPickerMode.date,
+                              autovalidateMode: AutovalidateMode.always,
+                              validator: (e) => (e?.day ?? 0) == 1
+                                  ? 'Please not the first day'
+                                  : null,
+                              onDateSelected: (DateTime value) {
+                                duedate = value;
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    })
                   ],
                 ),
               ),

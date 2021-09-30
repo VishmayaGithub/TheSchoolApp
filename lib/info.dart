@@ -48,6 +48,7 @@ class _InfoState extends State<Info> {
       ),
       body: Column(
           children: [
+            Image.network("https://i.gadgets360cdn.com/large/whitehatjr_1606110350914.jpg"),
             Padding(
             padding: const EdgeInsets.only(top: 68.0,left: 18,right:18),
             child: RichText(

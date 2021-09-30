@@ -66,16 +66,31 @@ class _HomeState extends State<Home> {
                       //height : 400
                     ),
                     Padding(
+                      padding: const EdgeInsets.only(top: 0,bottom: 18),
+                      child: Text(
+                        'Swift',
+                        style: GoogleFonts.poppins(
+                          color: texting,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(top: 0,bottom: 66),
                       child: Text(
-                        'My School App',
+                        'My School app',
                         style: GoogleFonts.poppins(
                           color: texting,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
                     ),
+
+
                   ],
                 ),
               ),

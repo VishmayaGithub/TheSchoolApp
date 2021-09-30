@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_school_app/pages/student/student_view.dart';
 import 'package:my_school_app/pages/teacher/teacher_home.dart';
 
+import 'components/nav2.dart';
 import 'helpers/colors.dart';
 
 class Both extends StatefulWidget {
@@ -36,12 +37,14 @@ class _BothState extends State<Both> {
     );
   }
 
-  void _onPressed() {
-    Future.delayed(Duration(seconds: 4));
+  Future _onPressed()async {
+    await Future.delayed(Duration(seconds: 4));
+    print(mail);
     final firestoreInstance = FirebaseFirestore.instance;
+    final email =  FirebaseAuth.instance.currentUser!.email;
     firestoreInstance
         .collection("users")
-        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where("email", isEqualTo: email)
         .get()
         .then((value) {
       value.docs.forEach((result) {
@@ -49,6 +52,7 @@ class _BothState extends State<Both> {
 
         if (result.data()["status"] == "teacher") {
           print("Teacher y'all");
+
           _navigateToTeacher();
         }
         if (result.data()["status"] == "student") {
@@ -62,9 +66,10 @@ class _BothState extends State<Both> {
   }
 
   void initState() {
-    Future.delayed(Duration(seconds: 4));
+    //Future.delayed(Duration(seconds: 4));
     _onPressed();
     super.initState();
+
     // print(selectedDay);
   }
 

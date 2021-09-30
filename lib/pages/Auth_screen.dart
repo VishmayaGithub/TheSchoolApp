@@ -35,7 +35,7 @@ class _Auth_screenState extends State<Auth_screen>
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController2 = TextEditingController();
   final TextEditingController passwordController2 = TextEditingController();
-  var check_email = "";
+  String check_email = "";
   var check_password = "";
   var email_sign_up = "";
   var name = "";
@@ -49,6 +49,7 @@ class _Auth_screenState extends State<Auth_screen>
     _animationTextRotate =
         Tween<double>(begin: 0, end: 90).animate(_animationController);
   }
+
 
   void updateToFirebase(){
     var firebaseUser = FirebaseAuth.instance.currentUser!.email;
@@ -73,6 +74,30 @@ class _Auth_screenState extends State<Auth_screen>
       (route) => false,
     );
   }
+  String dropdownvalue = 'Choose Status';
+  var items = [
+    'Choose Status',
+    'Teacher',
+    'Student'
+  ];
+  dropdown() {
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+      return DropdownButton(
+        value: dropdownvalue,
+        icon: Icon(Icons.keyboard_arrow_down),
+        items: items.map((String items) {
+          return DropdownMenuItem(value: items, child: Text(items));
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownvalue = newValue!;
+            status = newValue;
+          });
+        },
+      );
+    });
+  }
+
 
   @override
   void initState() {
@@ -84,6 +109,7 @@ class _Auth_screenState extends State<Auth_screen>
     _animationController.dispose();
     super.dispose();
   }
+
 
   void updateView() {
     setState(() {
@@ -121,9 +147,11 @@ class _Auth_screenState extends State<Auth_screen>
                           children: [
                             Spacer(),
                             TextField(
+
                               controller: emailController,
                               onChanged: (test) {
                                 check_email = test;
+                                mail = test;
 
                               },
                               decoration: InputDecoration(
@@ -176,6 +204,7 @@ class _Auth_screenState extends State<Auth_screen>
                               Spacer(),
 
                               TextFormField(
+                                style: TextStyle(color : Colors.white,),
                                 controller: emailController2,
                                 onChanged: (test){
                                   email_sign_up = test;
@@ -191,6 +220,7 @@ class _Auth_screenState extends State<Auth_screen>
                                 padding: const EdgeInsets.symmetric(
                                     vertical: defaultPadding),
                                 child: TextFormField(
+                                  style: TextStyle(color : Colors.white,),
                                   controller: passwordController2,
                                   obscureText: true,
                                   decoration: InputDecoration(
@@ -203,6 +233,7 @@ class _Auth_screenState extends State<Auth_screen>
                               ),
                               TextFormField(
                                 obscureText: true,
+                                style: TextStyle(color : Colors.white,),
                                 decoration: InputDecoration(
                                     hintText: "Confirm Password",
                                     fillColor: button,
@@ -325,7 +356,7 @@ class _Auth_screenState extends State<Auth_screen>
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("Feature not developed"),
+                                    title: Text("Sign up"),
                                     content: Wrap(
                                       children: [
                                         Padding(
@@ -334,48 +365,53 @@ class _Auth_screenState extends State<Auth_screen>
                                             onChanged: (text){
                                               name = text;
                                             },
+                                            style: TextStyle(color : Colors.white,),
                                             decoration: InputDecoration(
+
                                                 fillColor: button,
                                                 hintText: "Name",
+
                                                 enabledBorder: UnderlineInputBorder(
                                                     borderSide: new BorderSide(color: bg))),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(top:13.0),
-                                          child: TextFormField(
-                                            onChanged: (text){
-                                              status = text;
-                                            },
-                                            obscureText: true,
-                                            decoration: InputDecoration(
-                                                hintText: "Status",
-                                                fillColor: button,
-                                                enabledBorder: UnderlineInputBorder(
-                                                    borderSide: new BorderSide(color: bg))),
-                                          ),
+                                          child: dropdown()
                                         ),
                                       ],
 
 
                                     ),
                                     actions: [
-                                      TextButton(
-                                        child: Text("OK"),
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                          await authService2.createUserWithEmailAndPassword(
-                                              emailController2.text,
-                                              passwordController2.text);
-                                          updateToFirebase();
-                                          final snackBar = SnackBar(
-                                              content:
-                                              Text('Created a user successfully!! '));
+                                      Wrap(
+                                        children: [
+                                          TextButton(
+                                            child: Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
 
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(snackBar);
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("OK"),
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                              await authService2.createUserWithEmailAndPassword(
+                                                  emailController2.text,
+                                                  passwordController2.text);
+                                              updateToFirebase();
+                                              final snackBar = SnackBar(
+                                                  content:
+                                                  Text('Created a user successfully!! '));
 
-                                        },
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+
+                                            },
+                                          ),
+
+                                        ],
                                       ),
                                     ],
                                   );

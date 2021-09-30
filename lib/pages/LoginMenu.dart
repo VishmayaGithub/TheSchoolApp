@@ -53,14 +53,14 @@ class _LoginMenuState extends State<LoginMenu> {
                 child: RichText(
                     text: TextSpan(children: [
                   TextSpan(
-                    text: 'Lets start our journey on the ',
+                    text: 'Lets start our journey on ',
                     style: GoogleFonts.poppins(
                       color: texting,
                       fontSize: 26,
                     ),
                   ),
                   TextSpan(
-                      text: 'School App ',
+                      text: 'Swift ',
                       style: GoogleFonts.poppins(
                         color: texting,
                         fontSize: 30,
