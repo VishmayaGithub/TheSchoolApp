@@ -56,7 +56,7 @@ class _Auth_screenState extends State<Auth_screen>
     final firestoreInstance = FirebaseFirestore.instance;
     firestoreInstance.collection("users").add({
       "email": email_sign_up,
-      "status" : status,
+      "status" : status.toLowerCase(),
       "name" : name,
 
     }).then((value) {
